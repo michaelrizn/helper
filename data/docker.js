@@ -1,372 +1,187 @@
-// docker.js
 window.Docker = {
   "Docker - Основные команды": {
-    "docker --help": "Получить помощь по доступным командам Docker.",
-    "docker info":
-      "Показать системную информацию о Docker, включая количество образов, контейнеров, используемую память и другие детали.",
-    "docker build -t <image_name> .":
-      "Создать Docker-образ из Dockerfile в текущем каталоге и присвоить ему имя <image_name>.",
-    "docker build -t <image_name> --no-cache .":
-      "Создать Docker-образ без использования кэша, что гарантирует выполнение всех шагов сборки заново.",
-    "docker images":
-      "Показать список всех локальных Docker-образов с информацией о тегах, размерах и других деталях.",
-    "docker rmi <image_name>":
-      "Удалить указанный Docker-образ из локального хранилища.",
-    "docker image prune":
-      "Удалить неиспользуемые Docker-образы, чтобы освободить место на диске.",
-    "docker push <image_name>":
-      "Отправить Docker-образ в Docker Registry (например, Docker Hub).",
-    "docker pull <image_name>": "Загрузить Docker-образ из Docker Registry.",
-    "docker tag <source_image> <target_image>":
-      "Добавить или изменить тег у существующего Docker-образа, например, для публикации в реестре.",
-    "docker search <image_name>":
-      "Поиск Docker-образов в Docker Hub или другом подключенном реестре.",
-    "docker history <image_name>":
-      "Показать историю изменений указанного Docker-образа, включая все слои и команды сборки.",
-    "docker save -o <path> <image_name>":
-      "Сохранить Docker-образ в файл для последующей передачи или резервного копирования.",
-    "docker load -i <path>": "Загрузить Docker-образ из файла.",
-    "docker commit <container_name> <new_image_name>":
-      "Создать новый Docker-образ из текущего состояния контейнера.",
-    "docker inspect <image_name>":
-      "Получить детальную информацию о Docker-образе в формате JSON.",
-    "docker image ls -a":
-      "Показать все Docker-образы, включая промежуточные слои.",
-    "docker image rm <image_name>": "Удалить указанный Docker-образ.",
-    "docker image tag <image_name>:<tag> <repository>/<image_name>:<tag>":
-      "Тегировать Docker-образ для отправки в репозиторий.",
+    "docker help": "Справка по командам Docker",
+    "docker info": "Системная информация о Docker",
+    "docker build -t <имя> .": "Сборка образа из Dockerfile",
+    "docker build --no-cache .": "Сборка без использования кэша",
+    "docker images": "Список локальных образов",
+    "docker rmi <имя>": "Удалить образ",
+    "docker image prune": "Удалить неиспользуемые образы",
+    "docker push <имя>": "Отправить образ в registry",
+    "docker pull <имя>": "Загрузить образ из registry",
+    "docker tag <источник> <цель>": "Задать тег для образа",
+    "docker search <имя>": "Поиск образов в registry",
+    "docker history <имя>": "История изменений образа",
+    "docker save -o <путь> <имя>": "Сохранить образ в файл",
+    "docker load -i <путь>": "Загрузить образ из файла",
+    "docker commit <контейнер> <имя>": "Создать образ из контейнера",
+    "docker inspect <имя>": "Информация об образе",
+    "docker image ls -a": "Список всех образов",
+    "docker rm <имя>": "Удалить образ",
+    "docker tag <имя>:<тег> <репо>/<имя>:<тег>": "Тегировать для registry",
   },
   "Docker - Управление контейнерами": {
-    "docker ps": "Показать список всех запущенных контейнеров.",
-    "docker ps -a": "Показать все контейнеры, включая остановленные.",
-    "docker start <container_name>": "Запустить остановленный контейнер.",
-    "docker stop <container_name>": "Остановить работающий контейнер.",
-    "docker restart <container_name>": "Перезапустить контейнер.",
-    "docker rm <container_name>": "Удалить остановленный контейнер.",
-    "docker rm -f <container_name>":
-      "Принудительно удалить запущенный контейнер.",
-    "docker logs <container_name>": "Посмотреть логи указанного контейнера.",
-    "docker exec -it <container_name> bash":
-      "Запустить интерактивную bash-сессию внутри работающего контейнера.",
-    "docker exec -it <container_name> sh":
-      "Запустить интерактивную sh-сессию внутри работающего контейнера.",
-    "docker inspect <container_name>":
-      "Получить детальную информацию о контейнере в формате JSON.",
-    "docker run -d <image_name>":
-      "Запустить контейнер в фоновом режиме (detached mode) из указанного образа.",
-    "docker run -p <host_port>:<container_port> <image_name>":
-      "Запустить контейнер и пробросить порты с хоста на контейнер.",
-    "docker rename <old_name> <new_name>":
-      "Переименовать контейнер с <old_name> на <new_name>.",
-    "docker pause <container_name>":
-      "Приостановить все процессы внутри контейнера.",
-    "docker unpause <container_name>":
-      "Возобновить приостановленные процессы внутри контейнера.",
-    "docker cp <container_name>:/path/in/container /host/path":
-      "Скопировать файлы или директории из контейнера на хост.",
-    "docker top <container_name>":
-      "Показать запущенные процессы внутри контейнера.",
-    "docker stats":
-      "Показать использование ресурсов (CPU, память, сеть) для всех контейнеров.",
-    "docker run --name <container_name> <image_name>":
-      "Создать и запустить контейнер с указанным именем.",
-    "docker run -d --name <container_name> <image_name>":
-      "Создать и запустить контейнер с указанным именем в фоновом режиме.",
+    "docker ps": "Список запущенных контейнеров",
+    "docker ps -a": "Список всех контейнеров",
+    "docker start <имя>": "Запуск контейнера",
+    "docker stop <имя>": "Остановка контейнера",
+    "docker restart <имя>": "Перезапуск контейнера",
+    "docker rm <имя>": "Удалить контейнер",
+    "docker rm -f <имя>": "Принудительное удаление",
+    "docker logs <имя>": "Логи контейнера",
+    "docker exec -it <имя> bash": "Терминал в контейнере",
+    "docker exec -it <имя> sh": "Shell в контейнере",
+    "docker inspect <имя>": "Информация о контейнере",
+    "docker run -d <образ>": "Запуск в фоне",
+    "docker run -p <порт>:<порт> <образ>": "Проброс портов",
+    "docker rename <старое> <новое>": "Переименовать контейнер",
+    "docker pause <имя>": "Приостановить контейнер",
+    "docker unpause <имя>": "Возобновить контейнер",
+    "docker cp <имя>:/путь /путь": "Копировать файлы",
+    "docker top <имя>": "Процессы контейнера",
+    "docker stats": "Статистика использования ресурсов",
+    "docker run --name <имя> <образ>": "Запуск с именем",
+    "docker run -d --name <имя> <образ>": "Запуск в фоне с именем",
   },
   "Docker - Работа с сетями": {
-    "docker network ls": "Показать список всех доступных Docker-сетей.",
-    "docker network inspect <network_name>":
-      "Получить детальную информацию о указанной сети.",
-    "docker network create <network_name>":
-      "Создать новую Docker-сеть с именем <network_name>.",
-    "docker network connect <network_name> <container_name>":
-      "Подключить контейнер к указанной сети.",
-    "docker network disconnect <network_name> <container_name>":
-      "Отключить контейнер от указанной сети.",
-    "docker network rm <network_name>": "Удалить указанную Docker-сеть.",
-    "docker network prune": "Удалить все неиспользуемые Docker-сети.",
-    "docker run --network <network_name> <image_name>":
-      "Запустить контейнер и подключить его к указанной сети.",
-    "docker network create --driver bridge <network_name>":
-      "Создать сеть типа bridge.",
-    "docker network create --driver overlay <network_name>":
-      "Создать сеть типа overlay для многоконтейнерных приложений.",
-    "docker network create --subnet=192.168.1.0/24 <network_name>":
-      "Создать сеть с указанным подсетевым адресом.",
+    "docker network ls": "Список сетей",
+    "docker network inspect <имя>": "Информация о сети",
+    "docker network create <имя>": "Создать сеть",
+    "docker network connect <сеть> <контейнер>": "Подключить к сети",
+    "docker network disconnect <сеть> <контейнер>": "Отключить от сети",
+    "docker network rm <имя>": "Удалить сеть",
+    "docker network prune": "Удалить неиспользуемые сети",
+    "docker run --network <сеть> <образ>": "Запуск в сети",
+    "docker network create --driver bridge <имя>": "Создать bridge сеть",
+    "docker network create --driver overlay <имя>": "Создать overlay сеть",
+    "docker network create --subnet=192.168.1.0/24 <имя>": "Сеть с подсетью",
   },
   "Docker - Работа с томами": {
-    "docker volume ls": "Показать список всех Docker-томов.",
-    "docker volume create <volume_name>":
-      "Создать новый Docker-том с именем <volume_name>.",
-    "docker volume rm <volume_name>": "Удалить указанный Docker-том.",
-    "docker volume inspect <volume_name>":
-      "Получить детальную информацию о Docker-томе.",
-    "docker volume prune": "Удалить все неиспользуемые Docker-тома.",
-    "docker run -v <volume_name>:/path/in/container <image_name>":
-      "Создать и подключить Docker-том к контейнеру по указанному пути.",
-    "docker run --mount source=<volume_name>,target=/path/in/container <image_name>":
-      "Подключить Docker-том к контейнеру с использованием расширенного синтаксиса mount.",
-    "docker-compose.yml - volumes":
-      "Определение томов в файле Docker Compose для их использования в сервисах.",
-    "docker volume create --driver local <volume_name>":
-      "Создать локальный Docker-том с указанным драйвером.",
-    "docker run -v <host_path>:/path/in/container <image_name>":
-      "Примонтировать директорию с хоста к контейнеру вместо использования тома.",
-    "docker volume ls -f dangling=true":
-      "Показать только неиспользуемые Docker-тома.",
+    "docker volume ls": "Список томов",
+    "docker volume create <имя>": "Создать том",
+    "docker volume rm <имя>": "Удалить том",
+    "docker volume inspect <имя>": "Информация о томе",
+    "docker volume prune": "Удалить неиспользуемые тома",
+    "docker run -v <том>:/путь <образ>": "Подключить том",
+    "docker run --mount source=<том>,target=/путь <образ>":
+      "Подключить через mount",
+    "docker-compose.yml - volumes": "Конфигурация томов",
+    "docker volume create --driver local <имя>": "Локальный том",
+    "docker run -v /хост:/контейнер <образ>": "Монтировать директорию",
+    "docker volume ls -f dangling=true": "Неиспользуемые тома",
   },
   "Docker - Работа с образами": {
-    "docker build -t <image_name> .":
-      "Создать Docker-образ из Dockerfile в текущем каталоге и присвоить ему имя <image_name>.",
-    "docker build -t <image_name> --no-cache .":
-      "Создать Docker-образ без использования кэша, что гарантирует выполнение всех шагов сборки заново.",
-    "docker images":
-      "Показать список всех локальных Docker-образов с информацией о тегах, размерах и других деталях.",
-    "docker rmi <image_name>":
-      "Удалить указанный Docker-образ из локального хранилища.",
-    "docker image prune":
-      "Удалить неиспользуемые Docker-образы, чтобы освободить место на диске.",
-    "docker tag <source_image> <target_image>":
-      "Добавить или изменить тег у существующего Docker-образа, например, для публикации в реестре.",
-    "docker push <image_name>":
-      "Отправить Docker-образ в Docker Registry (например, Docker Hub).",
-    "docker pull <image_name>": "Загрузить Docker-образ из Docker Registry.",
-    "docker search <image_name>":
-      "Поиск Docker-образов в Docker Hub или другом подключенном реестре.",
-    "docker history <image_name>":
-      "Показать историю изменений указанного Docker-образа, включая все слои и команды сборки.",
-    "docker save -o <path> <image_name>":
-      "Сохранить Docker-образ в файл для последующей передачи или резервного копирования.",
-    "docker load -i <path>": "Загрузить Docker-образ из файла.",
-    "docker commit <container_name> <new_image_name>":
-      "Создать новый Docker-образ из текущего состояния контейнера.",
-    "docker inspect <image_name>":
-      "Получить детальную информацию о Docker-образе в формате JSON.",
-    "docker image ls -a":
-      "Показать все Docker-образы, включая промежуточные слои.",
-    "docker image rm <image_name>": "Удалить указанный Docker-образ.",
-    "docker image tag <image_name>:<tag> <repository>/<image_name>:<tag>":
-      "Тегировать Docker-образ для отправки в репозиторий.",
+    "docker build -t <имя> .": "Сборка образа",
+    "docker build --no-cache .": "Сборка без кэша",
+    "docker images": "Список образов",
+    "docker rmi <имя>": "Удалить образ",
+    "docker image prune": "Очистка образов",
+    "docker tag <источник> <цель>": "Тегирование",
+    "docker push <имя>": "Отправка в registry",
+    "docker pull <имя>": "Загрузка из registry",
+    "docker search <имя>": "Поиск образов",
+    "docker history <имя>": "История образа",
+    "docker save/load": "Экспорт/импорт образа",
+    "docker commit <контейнер> <имя>": "Создать из контейнера",
+    "docker inspect <имя>": "Информация об образе",
+    "docker image ls": "Список образов",
+    "docker rm <имя>": "Удаление образа",
+    "docker tag <имя>:<тег> <репо>/<имя>:<тег>": "Тегирование для registry",
   },
   "Docker - Docker Compose": {
-    "docker-compose up":
-      "Запустить все сервисы, определённые в docker-compose.yml, в переднем плане.",
-    "docker-compose up -d":
-      "Запустить все сервисы в фоновом режиме (detached mode).",
-    "docker-compose down":
-      "Остановить и удалить контейнеры, сети и тома, созданные Docker Compose.",
-    "docker-compose build":
-      "Собрать Docker-образы для всех сервисов, определённых в docker-compose.yml.",
-    "docker-compose start":
-      "Запустить остановленные сервисы, определённые в docker-compose.yml.",
-    "docker-compose stop":
-      "Остановить запущенные сервисы, определённые в docker-compose.yml.",
-    "docker-compose restart": "Перезапустить все запущенные сервисы.",
-    "docker-compose logs":
-      "Посмотреть логи всех сервисов или указанного сервиса.",
-    "docker-compose ps":
-      "Показать состояние всех сервисов, определённых в docker-compose.yml.",
-    "docker-compose exec <service> bash":
-      "Запустить интерактивную bash-сессию внутри указанного сервиса.",
-    "docker-compose scale <service>=<number>":
-      "Масштабировать количество экземпляров указанного сервиса до <number>.",
-    "docker-compose config":
-      "Проверить синтаксис файла docker-compose.yml и вывести итоговую конфигурацию.",
-    "docker-compose pull": "Загрузить обновлённые образы для всех сервисов.",
-    "docker-compose push":
-      "Отправить образы для всех сервисов в Docker Registry.",
-    "docker-compose run <service> <command>":
-      "Запустить одноразовый контейнер для выполнения команды внутри указанного сервиса.",
-    "docker-compose up --build": "Собрать образы и запустить сервисы.",
-    "docker-compose up --force-recreate":
-      "Принудительно пересоздать все контейнеры при запуске.",
-    "docker-compose down --volumes":
-      "Остановить сервисы и удалить созданные тома.",
+    "docker-compose up": "Запуск сервисов",
+    "docker-compose up -d": "Запуск в фоне",
+    "docker-compose down": "Остановка сервисов",
+    "docker-compose build": "Сборка образов",
+    "docker-compose start": "Запуск остановленных",
+    "docker-compose stop": "Остановка запущенных",
+    "docker-compose restart": "Перезапуск",
+    "docker-compose logs": "Логи сервисов",
+    "docker-compose ps": "Состояние сервисов",
+    "docker-compose exec": "Выполнить команду",
+    "docker-compose scale": "Масштабирование",
+    "docker-compose config": "Проверка конфигурации",
+    "docker-compose pull": "Обновление образов",
+    "docker-compose push": "Отправка образов",
+    "docker-compose run": "Запуск команды",
+    "docker-compose up --build": "Сборка и запуск",
+    "docker-compose --force-recreate": "Пересоздание",
+    "docker-compose down --volumes": "Удаление с томами",
   },
   "Docker - Docker Hub": {
-    "docker login -u <username>":
-      "Войти в Docker Hub с использованием имени пользователя <username>.",
-    "docker push <username>/<image_name>":
-      "Опубликовать Docker-образ в Docker Hub под вашим именем пользователя.",
-    "docker pull <username>/<image_name>":
-      "Загрузить Docker-образ из Docker Hub.",
-    "docker search <image_name>": "Поиск Docker-образов в Docker Hub.",
-    "docker logout": "Выйти из Docker Hub.",
-    "docker tag <image_name> <username>/<image_name>:<tag>":
-      "Добавить тег к образу для Docker Hub, например, <username>/<image_name>:latest.",
-    "docker push <username>/<image_name>:<tag>":
-      "Отправить образ с тегом в Docker Hub.",
-    "docker pull <username>/<image_name>:<tag>":
-      "Загрузить образ с тегом из Docker Hub.",
-    "docker repo create <repository_name>":
-      "Создать новый репозиторий в Docker Hub.",
-    "docker repo ls":
-      "Показать список репозиториев в вашем аккаунте Docker Hub.",
-    "docker repo delete <repository_name>":
-      "Удалить репозиторий из Docker Hub.",
-    "docker repo update <repository_name>":
-      "Обновить настройки репозитория в Docker Hub.",
+    "docker login": "Авторизация",
+    "docker push": "Отправка образа",
+    "docker pull": "Загрузка образа",
+    "docker search": "Поиск образов",
+    "docker logout": "Выход",
+    "docker tag": "Тегирование",
+    "docker push с тегом": "Отправка версии",
+    "docker pull с тегом": "Загрузка версии",
+    "docker repo create": "Создать репозиторий",
+    "docker repo ls": "Список репозиториев",
+    "docker repo delete": "Удалить репозиторий",
+    "docker repo update": "Обновить репозиторий",
   },
   "Docker - Общие сведения": {
-    "Что такое Docker?":
-      "Docker позволяет упаковать приложение и его зависимости в контейнер, обеспечивая изоляцию и совместимость среды. Это упрощает развертывание, масштабирование и управление приложениями в различных средах.",
-    "Что такое Docker Daemon?":
-      "Docker Daemon — это фоновый процесс, который управляет контейнерами, образами, сетями и томами. Он принимает команды от Docker Client через CLI или API и выполняет их.",
-    "Что такое Docker Client?":
-      "Docker Client — это интерфейс командной строки (CLI), который позволяет пользователям взаимодействовать с Docker Daemon для выполнения различных задач, таких как запуск контейнеров, создание образов и управление ресурсами.",
-    "Что такое Docker Registry?":
-      "Docker Registry — это хранилище для Docker-образов. Docker Hub — это публичный Docker Registry, но также можно настроить приватные реестры для хранения приватных образов.",
-    "Что такое контейнер?":
-      "Контейнер — это изолированная среда выполнения, которая включает приложение и все его зависимости, необходимые для работы. Контейнеры обеспечивают изоляцию процессов и ресурсов, что позволяет запускать несколько контейнеров на одном хосте без конфликтов.",
-    "Что такое образ (image)?":
-      "Образ — это неизменяемый шаблон, который используется для создания контейнеров. Он содержит все необходимые файлы и настройки для запуска приложения, включая операционную систему, зависимости и саму программу.",
-    "Преимущества Docker":
-      "Изоляция приложений и их зависимостей, портативность контейнеров между различными средами, быстрое развертывание и масштабирование приложений, эффективное использование ресурсов системы, упрощение CI/CD процессов, версионирование и управление изменениями образов, повышенная безопасность через изоляцию контейнеров, удобство тестирования и разработки благодаря одинаковым средам.",
-    "Контейнеризация vs Виртуализация":
-      "Контейнеризация: Лёгковесные изолированные среды, использующие ядро хоста. Контейнеры запускаются быстрее и потребляют меньше ресурсов по сравнению с виртуальными машинами. Виртуализация: Полноценные виртуальные машины с собственным ядром и ресурсами. Виртуальные машины обеспечивают полную изоляцию, но требуют больше ресурсов и времени на запуск.",
-    "Что такое multi-stage build?":
-      "Multi-stage build позволяет использовать несколько стадий сборки в одном Dockerfile для уменьшения размера итогового образа. Это достигается за счёт разделения процессов сборки и финального образа, где в финальный образ включаются только необходимые файлы.",
-    "Что такое Docker Swarm?":
-      "Docker Swarm — это встроенный в Docker оркестратор для управления кластером контейнеров. Он обеспечивает масштабирование, балансировку нагрузки, управление состоянием сервисов и автоматическое восстановление при сбоях.",
-    "Что такое Kubernetes?":
-      "Kubernetes — это мощный и гибкий оркестратор контейнеров с большим сообществом и поддержкой. Он предлагает расширенные возможности для масштабирования, управления состоянием, автоматизации развертывания и обновлений контейнеризированных приложений.",
-    "Основные компоненты Docker":
-      "Docker Engine: Основной компонент Docker, состоящий из Docker Daemon, Docker Client и Docker API. Docker Engine отвечает за создание, запуск и управление контейнерами. Docker Hub: Публичный реестр Docker-образов, позволяющий пользователям делиться, искать и управлять Docker-образами. Docker Compose: Инструмент для определения и запуска многоконтейнерных Docker-приложений с использованием YAML-файла. Docker Swarm: Оркестратор контейнеров, встроенный в Docker, для управления кластером контейнеров. Docker Volumes: Механизм для постоянного хранения данных вне контейнеров, обеспечивающий сохранность данных при удалении контейнеров.",
+    Docker: "Платформа для упаковки и запуска приложений в контейнерах",
+    "Docker Daemon": "Сервис для управления контейнерами",
+    "Docker Client": "CLI для работы с Docker",
+    "Docker Registry": "Хранилище образов",
+    Контейнер: "Изолированная среда для приложения",
+    Образ: "Шаблон для создания контейнера",
+    Преимущества: "Изоляция, портативность, масштабируемость",
+    "Контейнеры vs VM": "Легковесность против полной изоляции",
+    "Multi-stage build": "Многоэтапная сборка для оптимизации",
+    "Docker Swarm": "Встроенный оркестратор контейнеров",
+    Kubernetes: "Продвинутый оркестратор контейнеров",
+    Компоненты: "Engine, Hub, Compose, Swarm, Volumes",
   },
   "Docker - Примеры": {
-    "Создание простого контейнера с Nginx":
-      "Команда: `docker run --name my-nginx -p 8080:80 -d nginx`",
-    "Запуск контейнера с монтированным томом":
-      "Команда: `docker run -d -v my-data:/usr/share/nginx/html nginx`",
-    "Создание образа из Dockerfile":
-      'Dockerfile:\n```\nFROM python:3.8-slim\nCOPY app.py /app/\nWORKDIR /app\nRUN pip install flask\nCMD ["python", "app.py"]\n```',
-    "Сборка образа": "Команда: `docker build -t my-python-app .`",
-    "Запуск контейнера из собранного образа":
-      "Команда: `docker run --name my-app -p 5000:5000 -d my-python-app`",
-    "Просмотр логов работающего контейнера": "Команда: `docker logs my-app`",
-    "Выполнение команды внутри запущенного контейнера":
-      "Команда: `docker exec -it my-app bash`",
-    "Создание и подключение сети для нескольких контейнеров":
-      "Команды:\n`docker network create my-network`\n`docker run -d --name app1 --network my-network my-app`\n`docker run -d --name app2 --network my-network my-app`",
-    "Использование Docker Compose для многоконтейнерного приложения":
-      "docker-compose.yml:\n```\nversion: '3'\nservices:\n  web:\n    image: nginx\n    ports:\n      - \"8080:80\"\n  db:\n    image: postgres\n    environment:\n      POSTGRES_PASSWORD: example\n```",
-    "Запуск Docker Compose": "Команда: `docker-compose up -d`",
-    "Удаление всех сервисов и томов с Docker Compose":
-      "Команда: `docker-compose down -v`",
-    "Создание резервной копии Docker-образа":
-      "Команда: `docker save -o my-image-backup.tar my-image`",
-    "Восстановление Docker-образа из резервной копии":
-      "Команда: `docker load -i my-image-backup.tar`",
-    "Создание многослойного Dockerfile":
-      'Dockerfile:\n```\nFROM node:14\nWORKDIR /app\nCOPY package.json .\nRUN npm install\nCOPY . .\nCMD ["node", "server.js"]\n```',
-    "Сборка и запуск многоконтейнерного приложения с Docker Compose":
-      "Команды:\n`docker-compose build`\n`docker-compose up -d`",
-    "Просмотр информации о сети контейнера":
-      "Команда: `docker network inspect my-network`",
-    "Создание и использование приватного Docker Registry":
-      "Команды:\n`docker run -d -p 5000:5000 --name registry registry:2`\n`docker tag my-image localhost:5000/my-image`\n`docker push localhost:5000/my-image`",
-    "Использование Docker Secrets в Docker Swarm":
-      'Команды:\n`echo "mysecret" | docker secret create db_password -`\n`docker service create --name my-service --secret db_password my-image`',
-    "Масштабирование сервиса с помощью Docker Swarm":
-      "Команда: `docker service scale my-service=5`",
-    "Обновление сервиса в Docker Swarm без простоя":
-      "Команда: `docker service update --image my-new-image my-service`",
-    "Создание символической ссылки":
-      "Команда: `ln -s /var/www/html/index.html ~/index.html`",
-    "Изменение прав доступа рекурсивно":
-      "Команда: `chmod -R 755 /var/www/html`",
-    "Поиск и удаление больших файлов":
-      "Команда: `find /var/log -type f -size +500M -exec rm -f {} \\;`",
-    "Мониторинг сетевых подключений с помощью netstat":
-      "Команда: `netstat -tulnp` показывает все активные сетевые подключения и прослушивающие порты.",
-    "Создание и монтирование раздела":
-      "Команды:\n`fdisk /dev/sdb`\n`mkfs.ext4 /dev/sdb1`\n`mkdir /mnt/data`\n`mount /dev/sdb1 /mnt/data`",
-    "Настройка автоматического монтирования раздела при загрузке":
-      "Добавьте строку `/dev/sdb1 /mnt/data ext4 defaults 0 2` в файл `/etc/fstab`.",
-    "Перезапуск сетевого интерфейса":
-      "Команда: `sudo systemctl restart networking` или `sudo ifdown eth0 && sudo ifup eth0`",
-    "Изменение IP адреса интерфейса":
-      "Команда: `sudo ip addr add 192.168.1.100/24 dev eth0`",
-    "Просмотр текущих сетевых маршрутов": "Команда: `ip route show`",
-    "Сканирование порта с использованием nmap":
-      "Команда: `nmap -p 80,443 192.168.1.1`",
-    "Создание SOAP-сервиса с использованием Java и Spring Boot":
-      "Пример: Определение WSDL файла, создание классов сервисов и конфигурация Spring Boot для обработки SOAP-запросов.",
-    "Реализация bidirectional streaming в gRPC на Go":
-      "Пример: Реализация сервера и клиента, которые обмениваются потоками сообщений через gRPC, используя Go библиотеку.",
-    "Настройка ESB с использованием Apache Camel для интеграции с Salesforce":
-      "Пример: Создание маршрута Camel, который извлекает данные из Salesforce, преобразует их и отправляет в другую систему.",
-    "Использование Dead Letter Queue в RabbitMQ":
-      "Пример: Конфигурация очереди с DLX (Dead Letter Exchange) и настройка обработки неуспешных сообщений.",
-    "Создание и публикация Protocol Buffer схемы для gRPC сервиса":
-      "Пример: Определение .proto файла, генерация кода клиента и сервера с помощью protoc, и публикация схемы в репозитории.",
-    "Создание многослойного Dockerfile для оптимизации образа":
-      'Dockerfile:\n```\nFROM golang:1.16 AS builder\nWORKDIR /app\nCOPY . .\nRUN go build -o myapp\n\nFROM alpine:latest\nRUN apk --no-cache add ca-certificates\nWORKDIR /root/\nCOPY --from=builder /app/myapp .\nCMD ["./myapp"]\n```',
-    "Запуск контейнера с ограничением ресурсов":
-      "Команда: `docker run -d --name limited-container --memory=256m --cpus=1.0 my-image`",
-    "Мониторинг контейнера с использованием Prometheus и Grafana":
-      "Шаги:\n1. Запустить Prometheus и Grafana контейнеры.\n2. Настроить Prometheus для сбора метрик Docker.\n3. Создать дашборды в Grafana для визуализации метрик.",
+    Nginx: "docker run -p 8080:80 nginx",
+    Том: "docker run -v data:/app nginx",
+    Dockerfile: "FROM python\nCOPY . /app\nCMD python app.py",
+    Сборка: "docker build -t app .",
+    Запуск: "docker run -p 5000:5000 app",
+    Логи: "docker logs app",
+    Команда: "docker exec -it app bash",
+    Сеть: "docker network create net\ndocker run --net net app",
+    Compose: "web:\n  image: nginx\n  ports: 80:80",
+    Backup: "docker save app > backup.tar",
+    Restore: "docker load < backup.tar",
+    "Multi-stage": "FROM node AS build\nFROM nginx\nCOPY --from=build",
+    Ограничения: "docker run --memory 256m --cpus 1.0 app",
+    Мониторинг: "Prometheus + Grafana",
   },
   "Docker - Вопросы и Ответы для Собеседований": {
-    "Что такое Docker и какие проблемы он решает?":
-      "Docker позволяет упаковать приложение и его зависимости в контейнер, обеспечивая изоляцию, портативность и согласованность среды выполнения, что упрощает развертывание и масштабирование приложений.",
-    "Чем контейнеры Docker отличаются от виртуальных машин?":
-      "Контейнеры Docker используют ядро хоста и изолируют приложения на уровне операционной системы, что делает их более лёгкими и быстрыми по сравнению с виртуальными машинами, которые эмулируют полноценные операционные системы.",
-    "Что такое Dockerfile и как он используется?":
-      "Dockerfile — это текстовый файл с инструкциями для сборки Docker-образа. Он определяет базовый образ, копирует файлы, устанавливает зависимости и задаёт команды для запуска приложения.",
-    "Как работает Docker Daemon?":
-      "Docker Daemon — это фоновый процесс, который управляет контейнерами, образами, сетями и томами. Он принимает команды от Docker Client через CLI или API и выполняет их.",
-    "Что такое Docker Compose и для чего он используется?":
-      "Docker Compose — это инструмент для определения и запуска многоконтейнерных Docker-приложений с использованием YAML-файла. Он упрощает управление связями между сервисами и их конфигурациями.",
-    "Как управлять сетями в Docker?":
-      "Docker предоставляет различные типы сетей (bridge, host, overlay). С помощью команд `docker network create`, `docker network connect` и `docker network disconnect` можно создавать и управлять сетями, а также подключать контейнеры к ним.",
-    "Что такое Docker Volume и зачем он нужен?":
-      "Docker Volume — это механизм для постоянного хранения данных вне контейнеров, что обеспечивает сохранность данных при удалении контейнеров. Том используется для постоянного хранения данных, таких как базы данных или конфигурационные файлы.",
-    "Как обновить работающий контейнер без простоя?":
-      "Можно использовать стратегию blue-green deployment, где создаются новые контейнеры с обновлениями, проверяется их работоспособность и затем переключается трафик на новые контейнеры. Также можно использовать Docker Compose или оркестраторы, такие как Kubernetes, для управления обновлениями.",
-    "Что такое Docker Swarm и как он сравнивается с Kubernetes?":
-      "Docker Swarm — это встроенный в Docker оркестратор для управления кластером контейнеров. Kubernetes — более мощный и гибкий оркестратор с большим сообществом и поддержкой. Kubernetes предлагает более расширенные возможности для масштабирования, управления состоянием и автоматизации развертывания и обновлений.",
-    "Как оптимизировать Docker-образы?":
-      "Для оптимизации Docker-образов следует использовать минимальные базовые образы, объединять команды RUN в один слой, удалять временные файлы и кэш, использовать многослойную сборку и правильно настраивать кэширование.",
-    "Как обеспечить безопасность Docker контейнеров?":
-      "Используйте официальные образы, регулярно обновляйте образы и контейнеры, ограничивайте права доступа контейнеров, используйте сети и тома для изоляции, сканируйте образы на наличие уязвимостей и используйте механизмы аутентификации и авторизации.",
-    "Как масштабировать приложение с помощью Docker?":
-      "Можно использовать Docker Compose для масштабирования сервисов с помощью команды `docker-compose up --scale <service>=<number>`. Для более сложных сценариев масштабирования рекомендуется использовать оркестраторы, такие как Kubernetes или Docker Swarm.",
-    "Что такое Docker Registry и как с ним работать?":
-      "Docker Registry — это хранилище для Docker-образов. Docker Hub — это публичный Docker Registry. Можно также настроить приватный Docker Registry. Используя команды `docker push` и `docker pull`, можно отправлять и загружать образы в и из реестра.",
-    "Как мониторить Docker контейнеры?":
-      "Используйте встроенные команды Docker, такие как `docker stats`, или сторонние инструменты мониторинга, такие как Prometheus, Grafana, Datadog, для сбора и визуализации метрик контейнеров.",
-    "Что такое multi-stage build и как он используется?":
-      "Multi-stage build позволяет использовать несколько стадий сборки в одном Dockerfile для уменьшения размера итогового образа. Это достигается за счёт разделения процессов сборки и финального образа, где в финальный образ включаются только необходимые файлы.",
-    "Как управлять секретами в Docker?":
-      "Используйте Docker Secrets для безопасного хранения и управления конфиденциальными данными в Docker Swarm. Для Docker Compose можно использовать переменные окружения и интеграцию с внешними секретными хранилищами.",
-    "Что такое Docker Layer и как они влияют на производительность?":
-      "Docker Layer — это отдельный слой в Docker-образе, каждый из которых представляет собой изменение файловой системы. Использование эффективных слоёв помогает кэшировать сборку образов, что ускоряет процесс сборки и уменьшает размер образов.",
-    "Как восстановить контейнер из образа?":
-      "Используйте команду `docker run --name <new_container> <image_name>` для создания и запуска нового контейнера из существующего образа.",
-    "Что такое Docker Tags и как их использовать?":
-      "Docker Tags позволяют версионировать образы. Например, `my-image:latest` или `my-image:v1.0`. Используйте теги для управления различными версиями образов.",
-    "Как удалить все остановленные контейнеры?":
-      "Используйте команду `docker container prune` для удаления всех остановленных контейнеров.",
-    "Как настроить Docker для работы за прокси?":
-      "Добавьте настройки прокси в файл `/etc/systemd/system/docker.service.d/http-proxy.conf` и перезапустите Docker Daemon.",
-    "Что такое Docker Hub и как он используется?":
-      "Docker Hub — это публичный реестр Docker-образов, который позволяет пользователям делиться, искать и управлять Docker-образами. Можно публиковать собственные образы и использовать образы других пользователей.",
-    "Как использовать Docker Compose для настройки многоконтейнерного приложения?":
-      "Определите все сервисы, сети и тома в файле `docker-compose.yml`, затем используйте команды `docker-compose up` и `docker-compose down` для управления приложением.",
-    "Что такое Docker Swarm Mode и как его активировать?":
-      "Docker Swarm Mode — это встроенный в Docker оркестратор для управления кластером контейнеров. Активируйте его с помощью команды `docker swarm init`.",
-    "Как настроить автоматическое обновление Docker-образов?":
-      "Используйте инструменты CI/CD, такие как Jenkins или GitHub Actions, для автоматической сборки и развертывания новых образов при изменении кода.",
-    "Как проверить целостность Docker-образа?":
-      "Используйте команду `docker image inspect <image_name>` для проверки метаданных и слоёв образа. Также можно использовать хэши для верификации.",
-    "Как запустить контейнер с ограниченными ресурсами?":
-      "Используйте флаги `--memory` и `--cpus` при запуске контейнера, например: `docker run -d --name limited-container --memory=256m --cpus=1.0 my-image`.",
-    "Как использовать Docker Secrets для хранения конфиденциальных данных?":
-      "Создайте секреты с помощью команды `docker secret create <secret_name> <file>`, затем подключите их к сервисам в Docker Swarm с помощью флага `--secret`.",
-    "Как создать собственный Docker Registry?":
-      "Запустите официальный образ Docker Registry с помощью команды `docker run -d -p 5000:5000 --name registry registry:2` и настройте его для использования с приватными образами.",
-    "Что такое Docker Labels и как их использовать?":
-      "Docker Labels — это метаданные, которые можно присваивать контейнерам, образам и другим Docker-ресурсам. Используйте флаг `--label` для добавления меток при запуске контейнера или сборке образа.",
+    "Что такое Docker?": "Платформа контейнеризации",
+    "Контейнеры vs VM": "Легковесность против изоляции",
+    Dockerfile: "Инструкции для сборки образа",
+    "Docker Daemon": "Сервис управления контейнерами",
+    "Docker Compose": "Управление multi-container приложениями",
+    "Сети Docker": "Типы: bridge, host, overlay",
+    "Тома Docker": "Постоянное хранение данных",
+    Обновление: "Blue-green deployment",
+    "Swarm vs K8s": "Простота против функциональности",
+    Оптимизация: "Минимальные образы, правильные слои",
+    Безопасность: "Обновления, права, сканирование",
+    Масштабирование: "Compose scale или оркестраторы",
+    Registry: "Хранилище образов",
+    Мониторинг: "docker stats или Prometheus",
+    "Multi-stage": "Оптимизация размера образа",
+    Secrets: "Управление секретами",
+    Layers: "Слои образа",
+    Восстановление: "docker run из образа",
+    Tags: "Версионирование образов",
+    Очистка: "docker system prune",
+    Прокси: "Настройка в конфиге",
+    "Docker Hub": "Публичный registry",
+    "Compose setup": "YAML конфигурация",
+    "Swarm Mode": "docker swarm init",
+    "CI/CD": "Автоматическое обновление",
+    Проверка: "docker inspect",
+    Ресурсы: "Ограничение памяти/CPU",
+    Secrets: "Безопасное хранение данных",
+    Registry: "Локальное хранилище образов",
+    Labels: "Метаданные ресурсов",
   },
 };
