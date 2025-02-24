@@ -15,20 +15,23 @@
                 font-family: "Courier New", Courier, monospace;
                 font-size: var(--font-size);
                 display: flex;
-                height: 100vh;
-                overflow: hidden;
+                flex-direction: column;
+                min-height: 100vh;
+                overflow-x: hidden;
             }
 
-            /* Боковая панель слева */
-            #sidebar {
-                width: 250px;
+            /* Фиксированная панель управления */
+            #control-panel {
+                position: sticky;
+                top: 0;
                 background-color: #292929;
-                border-right: 2px solid #00ff00; /* Вертикальный разделитель */
-                padding: 20px;
+                border-bottom: 2px solid #00ff00;
+                padding: 10px 20px;
                 box-sizing: border-box;
                 display: flex;
-                flex-direction: column;
-                overflow-y: auto;
+                align-items: center;
+                gap: 20px;
+                z-index: 1000;
             }
 
             /* Контейнер для основного контента */
@@ -36,13 +39,12 @@
                 flex: 1;
                 padding: 20px;
                 box-sizing: border-box;
-                overflow-y: auto; /* Обеспечивает прокрутку основного контента */
                 background-color: #292929;
             }
 
             /* Поле поиска */
             #search {
-                width: 100%;
+                flex: 1;
                 padding: 10px;
                 font-size: 16px;
                 border: 2px solid #00ff00;
@@ -50,15 +52,14 @@
                 color: #00ff00;
                 outline: none;
                 border-radius: 4px;
-                margin-bottom: 20px;
                 box-sizing: border-box;
+                min-width: 200px;
             }
 
             /* Кнопки изменения размера шрифта */
             .font-size-controls {
                 display: flex;
-                justify-content: space-between;
-                margin-bottom: 20px;
+                gap: 10px;
             }
 
             .font-size-controls button {
@@ -76,9 +77,31 @@
                     color 0.3s;
             }
 
-            .font-size-controls button:hover {
+            .font-size-controls button:hover,
+            .column-controls button:hover {
                 background-color: #292929;
                 color: #000;
+            }
+
+            /* Стили для кнопок управления колонками */
+            .column-controls {
+                display: flex;
+                gap: 10px;
+            }
+
+            .column-controls button {
+                padding: 10px;
+                font-size: 14px;
+                border: 2px solid #00ff00;
+                background-color: #292929;
+                color: #00ff00;
+                cursor: pointer;
+                border-radius: 4px;
+                flex: 1;
+                margin: 0 5px;
+                transition:
+                    background-color 0.3s,
+                    color 0.3s;
             }
 
             /* Оглавление */
@@ -230,23 +253,19 @@
         </style>
     </head>
     <body>
-        <!-- Боковая панель слева -->
-        <div id="sidebar">
+        <!-- Фиксированная панель управления -->
+        <div id="control-panel">
             <!-- Поле поиска -->
             <input type="text" id="search" placeholder="Поиск " />
-
             <!-- Кнопки изменения размера шрифта -->
             <div class="font-size-controls">
-                <button id="decrease-font">-</button>
-                <button id="increase-font">+</button>
+                <button id="decrease-font">Font-</button>
+                <button id="increase-font">Font+</button>
             </div>
-
-            <!-- Оглавление -->
-            <div id="toc">
-                <h3>Оглавление</h3>
-                <ul>
-                    <!-- Ссылки будут динамически добавлены здесь -->
-                </ul>
+            <!-- Кнопки управления колонками -->
+            <div class="column-controls">
+                <button id="decrease-columns">Columns-</button>
+                <button id="increase-columns">Columns+</button>
             </div>
         </div>
 
@@ -342,7 +361,7 @@
                                 '<p style="color: red;">Нет доступных команд для отображения.</p>';
                         } else {
                             displayBlocks(ItCommands);
-                            generateTOC(ItCommands);
+                            // TOC generation removed
                         }
 
                         // Функция для создания блока
@@ -641,6 +660,31 @@
                                     `${currentSize}%`,
                                 );
                             }
+                        });
+
+                        // Обработчики для управления колонками
+                        const increaseColumnsBtn = document.getElementById("increase-columns");
+                        const decreaseColumnsBtn = document.getElementById("decrease-columns");
+
+                        // Функция для обновления количества колонок
+                        function updateColumns(change) {
+                            const container = document.getElementById("blocks-container");
+                            let currentColumns = getComputedStyle(container).getPropertyValue("column-count");
+                            currentColumns = parseInt(currentColumns) || 3; // По умолчанию 3 колонки
+
+                            let newColumns = currentColumns + change;
+                            // Ограничиваем количество колонок от 1 до 4
+                            newColumns = Math.max(1, Math.min(4, newColumns));
+
+                            container.style.columnCount = newColumns;
+                        }
+
+                        increaseColumnsBtn.addEventListener("click", () => {
+                            updateColumns(1);
+                        });
+
+                        decreaseColumnsBtn.addEventListener("click", () => {
+                            updateColumns(-1);
                         });
 
                         decreaseFontBtn.addEventListener("click", () => {
