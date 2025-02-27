@@ -1,0 +1,215 @@
+:root {
+    --font-size: 90%; /* Уменьшенный дефолтный размер шрифта */
+}
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #292929;
+    color: #00ff00;
+    font-family: "Courier New", Courier, monospace;
+    font-size: var(--font-size);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Фиксированная панель управления */
+#control-panel {
+    position: sticky;
+    top: 0;
+    background-color: #292929;
+    border-bottom: 2px solid #00ff00;
+    padding: 10px 20px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    z-index: 1000;
+}
+
+/* Контейнер для основного контента */
+#main-content {
+    flex: 1;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: #292929;
+    display: flex;
+    flex-direction: row;
+}
+
+/* Поле поиска */
+#search {
+    flex: 1;
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid #00ff00;
+    background-color: #292929;
+    color: #00ff00;
+    outline: none;
+    border-radius: 4px;
+    box-sizing: border-box;
+    min-width: 200px;
+}
+
+/* Кнопки изменения размера шрифта */
+.font-size-controls {
+    display: flex;
+    gap: 10px;
+}
+
+.font-size-controls button {
+    padding: 10px;
+    font-size: 14px;
+    border: 2px solid #00ff00;
+    background-color: #292929;
+    color: #00ff00;
+    cursor: pointer;
+    border-radius: 4px;
+    flex: 1;
+    margin: 0 5px;
+    transition:
+        background-color 0.3s,
+        color 0.3s;
+}
+
+.font-size-controls button:hover,
+.column-controls button:hover {
+    background-color: #292929;
+    color: #000;
+}
+
+/* Стили для кнопок управления колонками */
+.column-controls {
+    display: flex;
+    gap: 10px;
+}
+
+.column-controls button {
+    padding: 10px;
+    font-size: 14px;
+    border: 2px solid #00ff00;
+    background-color: #292929;
+    color: #00ff00;
+    cursor: pointer;
+    border-radius: 4px;
+    flex: 1;
+    margin: 0 5px;
+    transition:
+        background-color 0.3s,
+        color 0.3s;
+}
+
+/* TOC styles removed */
+
+/* Контейнер для блоков команд с использованием CSS Columns */
+#blocks-container {
+    column-count: 3;
+    column-gap: 20px;
+    padding: 0; /* Убраны внутренние отступы */
+    box-sizing: border-box;
+    flex: 1;
+    width: 100%;
+}
+
+/* Стиль блока команды */
+.block {
+    background-color: #292929;
+    border: 2px solid #00ff00;
+    border-radius: 8px;
+    padding: 20px;
+    box-sizing: border-box;
+    margin-bottom: 20px; /* Отступ между блоками */
+    display: inline-block;
+    width: 100%; /* Ширина блока внутри колонки */
+    /* Переходы для плавного появления и исчезновения */
+    opacity: 1;
+    transform: scale(1);
+    transition:
+        opacity 0.3s ease,
+        transform 0.3s ease;
+}
+
+/* Скрытие блока */
+.block.hidden {
+    opacity: 0;
+    transform: scale(0.95);
+    pointer-events: none;
+    transition:
+        opacity 0.3s ease,
+        transform 0.3s ease;
+    display: none; /* Полностью скрыть блок */
+}
+
+/* Заголовок блока */
+.block h2 {
+    margin-top: 0;
+    color: #ffd700;
+    font-size: 20px;
+}
+
+/* Стиль команды */
+.command {
+    margin: 5px 0;
+}
+
+/* Скрытие команды */
+.command.hidden-command {
+    display: none; /* Скрывать несоответствующие команды */
+}
+
+/* Стиль команды */
+.command .cmd {
+    color: #00bfff;
+    font-weight: bold;
+}
+
+/* Стиль двоеточия */
+.command .colon {
+    color: #adff2f;
+}
+
+/* Стиль описания команды */
+.command .description {
+    color: #adff2f;
+}
+
+/* Стили для подсветки найденных слов */
+mark {
+    background-color: yellow;
+    color: black;
+}
+
+/* Медиа-запросы для адаптивности */
+@media (max-width: 1200px) {
+    #blocks-container {
+        column-count: 2;
+    }
+}
+
+@media (max-width: 800px) {
+    #blocks-container {
+        column-count: 1;
+    }
+}
+
+@media (max-width: 600px) {
+    #sidebar {
+        width: 200px;
+    }
+
+    #blocks-container {
+        column-count: 1;
+        padding: 0;
+        column-gap: 15px;
+    }
+
+    .font-size-controls button {
+        font-size: 12px;
+        padding: 8px;
+    }
+
+    .block {
+        padding: 15px;
+    }
+}
