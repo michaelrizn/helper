@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Тесты - Шпаргалка</title>
+        <link rel="stylesheet" href="styles.css">
+        <style>
+            /* Дополнительные стили для тестов */
+            .test-container {
+                max-width: 800px;
+                margin: 0 auto;
+                padding: 20px;
+                background-color: #292929;
+                border: 2px solid #00ff00;
+                border-radius: 8px;
+            }
+            
+            .question {
+                color: #ffd700;
+                font-size: 20px;
+                margin-bottom: 20px;
+            }
+            
+            .options {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .option {
+                padding: 10px;
+                background-color: #292929;
+                border: 2px solid #00bfff;
+                border-radius: 4px;
+                color: #adff2f;
+                cursor: pointer;
+                transition: background-color 0.3s;
+            }
+            
+            .option:hover {
+                background-color: #333;
+            }
+            
+            .option.selected {
+                background-color: #004080;
+            }
+            
+            .option.correct {
+                background-color: #006400;
+                border-color: #00ff00;
+            }
+            
+            .option.incorrect {
+                background-color: #800000;
+                border-color: #ff0000;
+            }
+            
+            .controls {
+                margin-top: 20px;
+                display: flex;
+                justify-content: space-between;
+            }
+            
+            .topic-selector {
+                margin-bottom: 20px;
+                display: flex;
+                gap: 10px;
+            }
+            
+            .topic-btn {
+                padding: 10px;
+                font-size: 14px;
+                border: 2px solid #00ff00;
+                background-color: #292929;
+                color: #00ff00;
+                cursor: pointer;
+                border-radius: 4px;
+                transition: background-color 0.3s, color 0.3s;
+            }
+            
+            .topic-btn.active {
+                background-color: #00ff00;
+                color: #292929;
+            }
+            
+            .result {
+                margin-top: 20px;
+                padding: 10px;
+                border-radius: 4px;
+                text-align: center;
+                font-weight: bold;
+                display: none;
+            }
+            
+            .home-btn {
+                padding: 10px;
+                font-size: 14px;
+                border: 2px solid #00ff00;
+                background-color: #292929;
+                color: #00ff00;
+                cursor: pointer;
+                border-radius: 4px;
+                transition: background-color 0.3s, color 0.3s;
+                margin-bottom: 20px;
+            }
+            
+            .home-btn:hover {
+                background-color: #00ff00;
+                color: #292929;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Фиксированная панель управления -->
+        <div id="control-panel">
+            <button class="home-btn" onclick="window.location.href='index.html'">На главную</button>
+            <!-- Кнопки изменения размера шрифта -->
+            <div class="font-size-controls">
+                <button id="decrease-font">Font-</button>
+                <button id="increase-font">Font+</button>
+            </div>
+        </div>
+
+        <!-- Контейнер для основного контента -->
+        <div id="main-content">
+            <div class="test-container">
+                <div class="topic-selector">
+                    <button class="topic-btn active" data-topic="linux">Linux</button>
+                    <button class="topic-btn" data-topic="sql">SQL</button>
+                    <button class="topic-btn" data-topic="api">API</button>
+                    <button class="topic-btn" data-topic="bd">BD</button>
+                </div>
+                
+                <div class="question" id="question">Загрузка вопроса...</div>
+                
+                <div class="options" id="options">
+                    <!-- Варианты ответов будут добавлены динамически -->
+                </div>
+                
+                <div class="controls">
+                    <button id="prev-btn" class="topic-btn" disabled>Предыдущий</button>
+                    <button id="next-btn" class="topic-btn">Следующий</button>
+                </div>
+                
+                <div class="result" id="result"></div>
+            </div>
+        </div>
+
+        <!-- Подключаем файлы с тестами -->
+        <script src="data/tests/linux.js"></script>
+        <script src="data/tests/sql.js"></script>
+        <script src="data/tests/api.js"></script>
+        <script src="data/tests/bd.js"></script>
+        
+        <!-- Подключаем JavaScript для тестов -->
+        <script src="js/tests.js"></script>
+    </body>
+</html>

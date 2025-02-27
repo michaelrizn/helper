@@ -36,6 +36,14 @@ function highlight(text, words) {
 
 // Инициализация приложения после загрузки DOM
 document.addEventListener('DOMContentLoaded', () => {
+    // Добавляем обработчик для кнопки Tests
+    const testsButton = document.getElementById('tests-button');
+    if (testsButton) {
+        testsButton.addEventListener('click', () => {
+            window.location.href = 'tests.html';
+        });
+    }
+    
     // Проверяем, что data/files.js загрузился и window.files доступен
     if (window.files && Array.isArray(window.files)) {
         loadScripts(window.files)
