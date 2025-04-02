@@ -222,30 +222,39 @@ document.addEventListener('DOMContentLoaded', () => {
         resultElement.style.color = percentage >= 70 ? '#00ff00' : '#ff6347';
     }
     
-    // Функции для изменения размера шрифта
-    increaseFontBtn.addEventListener('click', () => {
-        let currentSize = parseFloat(
-            getComputedStyle(
-                document.documentElement
-            ).getPropertyValue('--font-size')
-        );
-        if (currentSize < 200) { // Максимальный размер 200%
-            currentSize += 10;
-            document.documentElement.style.setProperty('--font-size', `${currentSize}%`);
+    // Обработчики изменения размера шрифта
+    const decreaseBtn = document.getElementById('decrease-font');
+    const increaseBtn = document.getElementById('increase-font');
+    
+    let fontSize = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--font-size')) || 1.0;
+    const minSize = 0.8;
+    const maxSize = 2.5;
+    
+    function updateFontSize() {
+        document.documentElement.style.setProperty('--font-size', `${fontSize}em`);
+        localStorage.setItem('fontSize', fontSize);
+    }
+    
+    decreaseBtn.addEventListener('click', () => {
+        if (fontSize > minSize) {
+            fontSize = Math.round((fontSize - 0.1) * 10) / 10;
+            updateFontSize();
         }
     });
     
-    decreaseFontBtn.addEventListener('click', () => {
-        let currentSize = parseFloat(
-            getComputedStyle(
-                document.documentElement
-            ).getPropertyValue('--font-size')
-        );
-        if (currentSize > 50) { // Минимальный размер 50%
-            currentSize -= 10;
-            document.documentElement.style.setProperty('--font-size', `${currentSize}%`);
+    increaseBtn.addEventListener('click', () => {
+        if (fontSize < maxSize) {
+            fontSize = Math.round((fontSize + 0.1) * 10) / 10;
+            updateFontSize();
         }
     });
+    
+    // Восстановление размера при загрузке
+    const savedSize = localStorage.getItem('fontSize');
+    if (savedSize) {
+        fontSize = parseFloat(savedSize);
+        updateFontSize();
+    }
     
     // Инициализация
     initTests();
