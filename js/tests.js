@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (window.SQLTests) tests.sql = window.SQLTests;
         if (window.APITests) tests.api = window.APITests;
         if (window.BDTests) tests.bd = window.BDTests;
+        if (window.GrafanaTests) tests.grafana = window.GrafanaTests;
         
         // Проверка наличия тестов
         if (!tests[currentTopic]) {
@@ -132,8 +133,8 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const question = getCurrentQuestion();
         
-        // Обновление текста вопроса
-        questionElement.textContent = question.question;
+        // Обновление текста вопроса с прогрессом
+        questionElement.textContent = `Вопрос ${currentQuestionIndex + 1} из ${tests[currentTopic].length}: ${question.question}`;
         
         // Очистка вариантов ответов
         optionsElement.innerHTML = '';

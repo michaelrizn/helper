@@ -28,6 +28,27 @@ body {
     z-index: 1000;
 }
 
+/* Выровнять все кнопки в панели по размеру и вертикали */
+#control-panel button {
+    padding: 8px 14px;
+    font-size: 14px;
+    line-height: 1.2;
+    border: 2px solid #00ff00;
+    background-color: #292929;
+    color: #00ff00;
+    cursor: pointer;
+    border-radius: 4px;
+    margin: 0 5px;
+    transition:
+        background-color 0.3s,
+        color 0.3s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px; /* фиксированная высота для выравнивания */
+    box-sizing: border-box;
+}
+
 /* Контейнер для основного контента */
 #main-content {
     flex: 1;
@@ -66,7 +87,6 @@ body {
     color: #00ff00;
     cursor: pointer;
     border-radius: 4px;
-    flex: 1;
     margin: 0 5px;
     transition:
         background-color 0.3s,
@@ -93,7 +113,6 @@ body {
     color: #00ff00;
     cursor: pointer;
     border-radius: 4px;
-    flex: 1;
     margin: 0 5px;
     transition:
         background-color 0.3s,
