@@ -2,39 +2,105 @@
 <html lang="ru">
     <head>
         <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="Шпаргалка по командам и справочной информации" />
         <title>Шпаргалка</title>
         <link rel="stylesheet" href="styles.css">
+        <!-- Предопределяем пустые объекты для категорий -->
+        <script>
+            window.Linux = window.Linux || {};
+            window.Docker = window.Docker || {};
+            window.Git = window.Git || {};
+            window.Kubernetes = window.Kubernetes || {};
+            window.Network = window.Network || {};
+            window.Other = window.Other || {};
+            window.Postman = window.Postman || {};
+            window.SQL = window.SQL || {};
+            window.ABC = window.ABC || {};
+            window.QuestsAndAnswers = window.QuestsAndAnswers || {};
+            window.Api = window.Api || {};
+            window.Formats = window.Formats || {};
+            window.BD = window.BD || {};
+            window.Architecture = window.Architecture || {};
+            window.Grafana = window.Grafana || {};
+        </script>
     </head>
     <body>
         <!-- Фиксированная панель управления -->
-        <div id="control-panel">
+        <header id="control-panel" role="banner">
             <!-- Поле поиска -->
-            <input type="text" id="search" placeholder="Поиск " />
+            <div class="search-container">
+                <label for="search" class="visually-hidden">Поиск команд</label>
+                <input type="text" id="search" placeholder="Поиск" aria-label="Поиск команд" />
+            </div>
+            
             <!-- Кнопки изменения размера шрифта -->
             <div class="font-size-controls">
-                <button id="decrease-font">Font-</button>
-                <button id="increase-font">Font+</button>
+                <button id="decrease-font" aria-label="Уменьшить размер шрифта">Font-</button>
+                <button id="increase-font" aria-label="Увеличить размер шрифта">Font+</button>
             </div>
+            
             <!-- Кнопки управления колонками -->
             <div class="column-controls">
-                <button id="decrease-columns">Columns-</button>
-                <button id="increase-columns">Columns+</button>
-                <button id="tests-button">Tests</button>
+                <button id="decrease-columns" aria-label="Уменьшить количество колонок">Columns-</button>
+                <button id="increase-columns" aria-label="Увеличить количество колонок">Columns+</button>
+                <button id="tests-button" aria-label="Перейти на страницу тестов">Tests</button>
             </div>
-        </div>
+        </header>
 
         <!-- Контейнер для основного контента -->
-        <div id="main-content">
+        <main id="main-content" role="main">
             <!-- Контейнер для блоков команд -->
-            <div id="blocks-container">
-                <!-- Блоки будут динамически добавлены здесь -->
-            </div>
-        </div>
+            <section id="blocks-container" aria-label="Блоки команд">
+                <p id="loading-message">Загрузка данных...</p>
+            </section>
+        </main>
 
-        <!-- Подключаем файл с перечнем всех скриптов данных -->
+        <!-- Загрузка скриптов -->
         <script src="data/files.js"></script>
-        
-        <!-- Подключаем основной JavaScript файл -->
-        <script src="js/main.js"></script>
+        <script>
+            // Простая загрузка данных и отображение контента
+            document.addEventListener('DOMContentLoaded', function() {
+                console.log('DOM загружен, начинаем загрузку данных');
+                
+                // Загружаем файлы данных напрямую
+                if (window.files && Array.isArray(window.files)) {
+                    const scripts = window.files.map(file => {
+                        return new Promise((resolve, reject) => {
+                            const script = document.createElement('script');
+                            script.src = `data/${file}`;
+                            script.onload = () => resolve(file);
+                            script.onerror = () => resolve(null);
+                            document.head.appendChild(script);
+                        });
+                    });
+                    
+                    // После загрузки всех данных загружаем fix_loader.js
+                    Promise.all(scripts).then(loadedFiles => {
+                        console.log('Все файлы данных загружены:', loadedFiles.filter(Boolean));
+                        
+                        // Загружаем fix_loader.js для отображения блоков и настройки событий
+                        const loaderScript = document.createElement('script');
+                        loaderScript.src = 'fix_loader.js';
+                        document.body.appendChild(loaderScript);
+                    });
+                } else {
+                    console.error('Файл data/files.js не загружен или не содержит массива');
+                    // Загружаем fix_loader.js для восстановления данных
+                    const loaderScript = document.createElement('script');
+                    loaderScript.src = 'fix_loader.js';
+                    document.body.appendChild(loaderScript);
+                }
+            });
+            
+            // Если DOMContentLoaded не сработал, запускаем загрузку сразу
+            if (document.readyState === 'complete' || document.readyState === 'interactive') {
+                console.log('Документ уже загружен, немедленно запускаем загрузку данных');
+                // Загружаем fix_loader.js напрямую
+                const loaderScript = document.createElement('script');
+                loaderScript.src = 'fix_loader.js';
+                document.body.appendChild(loaderScript);
+            }
+        </script>
     </body>
 </html>

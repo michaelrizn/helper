@@ -2,25 +2,40 @@
 <html lang="ru">
     <head>
         <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="Тесты по командам и справочной информации" />
         <title>Тесты - Шпаргалка</title>
         <link rel="stylesheet" href="styles.css">
         <style>
-    body {
-        font-size: 1.5em;
-    }
+            /* Стили для тестов с использованием переменных из styles.css */
+            body {
+                font-size: 1.5em;
+            }
+
+            /* Класс для визуально скрытого контента (доступен только для скринридеров) */
+            .visually-hidden {
+                position: absolute;
+                width: 1px;
+                height: 1px;
+                margin: -1px;
+                padding: 0;
+                overflow: hidden;
+                clip: rect(0, 0, 0, 0);
+                border: 0;
+            }
 
             /* Дополнительные стили для тестов */
             .test-container {
                 max-width: 800px;
                 margin: 0 auto;
                 padding: 20px;
-                background-color: #292929;
-                border: 2px solid #00ff00;
+                background-color: var(--color-bg-dark);
+                border: 2px solid var(--color-border);
                 border-radius: 8px;
             }
             
             .question {
-                color: #ffd700;
+                color: var(--color-text-header);
                 font-size: 1.5em;
                 margin-bottom: 20px;
             }
@@ -33,30 +48,30 @@
             
             .option {
                 padding: 10px;
-                background-color: #292929;
-                border: 2px solid #00bfff;
+                background-color: var(--color-bg-dark);
+                border: 2px solid var(--color-border);
                 border-radius: 4px;
-                color: #adff2f;
+                color: var(--color-text-description);
                 cursor: pointer;
                 transition: background-color 0.3s;
             }
             
             .option:hover {
-                background-color: #333;
+                background-color: var(--color-button-hover);
             }
             
             .option.selected {
-                background-color: #004080;
+                background-color: #404050;
             }
             
             .option.correct {
-                background-color: #006400;
-                border-color: #00ff00;
+                background-color: #405040;
+                border-color: #607060;
             }
             
             .option.incorrect {
-                background-color: #800000;
-                border-color: #ff0000;
+                background-color: #504040;
+                border-color: #706060;
             }
             
             .controls {
@@ -68,23 +83,24 @@
             .topic-selector {
                 margin-bottom: 20px;
                 display: flex;
+                flex-wrap: wrap;
                 gap: 10px;
             }
             
             .topic-btn {
                 padding: 10px;
                 font-size: 1em;
-                border: 2px solid #00ff00;
-                background-color: #292929;
-                color: #00ff00;
+                border: 2px solid var(--color-border);
+                background-color: var(--color-bg-dark);
+                color: var(--color-text-primary);
                 cursor: pointer;
                 border-radius: 4px;
                 transition: background-color 0.3s, color 0.3s;
             }
             
             .topic-btn.active {
-                background-color: #00ff00;
-                color: #292929;
+                background-color: var(--color-button-active);
+                color: var(--color-text-primary);
             }
             
             .result {
@@ -99,66 +115,190 @@
             .home-btn {
                 padding: 10px;
                 font-size: 14px;
-                border: 2px solid #00ff00;
-                background-color: #292929;
-                color: #00ff00;
+                border: 2px solid var(--color-border);
+                background-color: var(--color-bg-dark);
+                color: var(--color-text-primary);
                 cursor: pointer;
                 border-radius: 4px;
                 transition: background-color 0.3s, color 0.3s;
-                margin-bottom: 20px;
+                margin-right: 20px;
             }
             
             .home-btn:hover {
-                background-color: #00ff00;
-                color: #292929;
+                background-color: var(--color-button-hover);
+            }
+
+            @media (max-width: 800px) {
+                .topic-selector {
+                    flex-direction: column;
+                }
+                
+                .controls {
+                    flex-direction: column;
+                    gap: 10px;
+                }
+                
+                .home-btn {
+                    margin-right: 0;
+                    margin-bottom: 10px;
+                }
             }
         </style>
     </head>
     <body>
         <!-- Фиксированная панель управления -->
-        <div id="control-panel">
-            <button class="home-btn" onclick="window.location.href='index.html'">На главную</button>
+        <header id="control-panel" role="banner">
+            <button class="home-btn" onclick="window.location.href='index.html'" aria-label="Вернуться на главную страницу">На главную</button>
             <!-- Кнопки изменения размера шрифта -->
             <div class="font-size-controls">
-                <button id="decrease-font">Font-</button>
-                <button id="increase-font">Font+</button>
+                <button id="decrease-font" aria-label="Уменьшить размер шрифта">Font-</button>
+                <button id="increase-font" aria-label="Увеличить размер шрифта">Font+</button>
             </div>
-        </div>
+        </header>
 
         <!-- Контейнер для основного контента -->
-        <div id="main-content">
-            <div class="test-container">
-                <div class="topic-selector">
-                    <button class="topic-btn active" data-topic="linux">Linux</button>
-                    <button class="topic-btn" data-topic="sql">SQL</button>
-                    <button class="topic-btn" data-topic="api">API</button>
-                    <button class="topic-btn" data-topic="bd">BD</button>
-                    <button class="topic-btn" data-topic="grafana">Gra</button>
+        <main id="main-content" role="main">
+            <section class="test-container" aria-labelledby="current-question">
+                <div class="topic-selector" role="tablist" aria-label="Выбор темы для тестирования">
+                    <button class="topic-btn active" data-topic="linux" role="tab" aria-selected="true">Linux</button>
+                    <button class="topic-btn" data-topic="sql" role="tab" aria-selected="false">SQL</button>
+                    <button class="topic-btn" data-topic="api" role="tab" aria-selected="false">API</button>
+                    <button class="topic-btn" data-topic="bd" role="tab" aria-selected="false">BD</button>
+                    <button class="topic-btn" data-topic="grafana" role="tab" aria-selected="false">Grafana</button>
                 </div>
                 
-                <div class="question" id="question">Загрузка вопроса...</div>
+                <h2 class="question" id="current-question">Загрузка вопроса...</h2>
                 
-                <div class="options" id="options">
+                <div class="options" id="options" role="radiogroup" aria-labelledby="current-question">
                     <!-- Варианты ответов будут добавлены динамически -->
                 </div>
                 
                 <div class="controls">
-                    <button id="prev-btn" class="topic-btn" disabled>Предыдущий</button>
-                    <button id="next-btn" class="topic-btn">Следующий</button>
+                    <button id="prev-btn" class="topic-btn" disabled aria-label="Предыдущий вопрос">Предыдущий</button>
+                    <button id="next-btn" class="topic-btn" aria-label="Следующий вопрос">Следующий</button>
                 </div>
                 
-                <div class="result" id="result"></div>
-            </div>
-        </div>
+                <div class="result" id="result" role="status" aria-live="polite"></div>
+            </section>
+        </main>
 
-        <!-- Подключаем файлы с тестами -->
-        <script src="data/tests/linux.js"></script>
-        <script src="data/tests/sql.js"></script>
-        <script src="data/tests/api.js"></script>
-        <script src="data/tests/bd.js"></script>
-        <script src="data/tests/grafana.js"></script>
-        
-        <!-- Подключаем JavaScript для тестов -->
-        <script src="js/tests.js"></script>
+        <!-- Загрузка скриптов -->
+        <script>
+            // Подготавливаем объекты для тестовых данных
+            window.LinuxTests = window.LinuxTests || [];
+            window.SQLTests = window.SQLTests || [];
+            window.APITests = window.APITests || [];
+            window.BDTests = window.BDTests || [];
+            window.GrafanaTests = window.GrafanaTests || [];
+            
+            // Функция для инициализации тестов после загрузки всех файлов
+            function initializeTests() {
+                console.log('Инициализация тестов...');
+                // Проверим наличие тестов в глобальных переменных
+                console.log('LinuxTests:', window.LinuxTests.length);
+                console.log('SQLTests:', window.SQLTests.length);
+                console.log('APITests:', window.APITests.length);
+                console.log('BDTests:', window.BDTests.length);
+                console.log('GrafanaTests:', window.GrafanaTests.length);
+                
+                // Создаем экземпляр класса TestManager для управления тестами
+                window.testManager = new TestManager();
+                window.testManager.init();
+            }
+            
+            // Функция для загрузки скрипта с обработкой ошибок
+            function loadScript(src, callback) {
+                const script = document.createElement('script');
+                script.src = src;
+                script.onerror = function() {
+                    console.error(`Ошибка загрузки файла: ${src}`);
+                    callback(false);
+                };
+                script.onload = function() {
+                    console.log(`Файл успешно загружен: ${src}`);
+                    callback(true);
+                };
+                document.head.appendChild(script);
+            }
+
+            // Загружаем основной JS для тестов первым
+            loadScript('js/tests.js', function(success) {
+                if (!success) {
+                    console.error('Не удалось загрузить основной файл JS для тестов');
+                    return;
+                }
+                
+                // Затем загружаем файлы с тестами
+                loadScript('data/tests/linux.js', function() {
+                    loadScript('data/tests/sql.js', function() {
+                        loadScript('data/tests/api.js', function() {
+                            loadScript('data/tests/bd.js', function() {
+                                loadScript('data/tests/grafana.js', function() {
+                                    // После загрузки всех файлов инициализируем тесты
+                                    setTimeout(initializeTests, 100);
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+        </script>
+
+        <!-- Загружаем настройки из localStorage -->
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Функция для загрузки настроек из localStorage
+                function loadSettings(key, defaultValue) {
+                    try {
+                        const value = localStorage.getItem(key);
+                        return value !== null ? value : defaultValue;
+                    } catch (e) {
+                        console.warn('Не удалось загрузить настройки:', e);
+                        return defaultValue;
+                    }
+                }
+
+                // Функция для сохранения настроек в localStorage
+                function saveSettings(key, value) {
+                    try {
+                        localStorage.setItem(key, value);
+                    } catch (e) {
+                        console.warn('Не удалось сохранить настройки:', e);
+                    }
+                }
+
+                // Загружаем размер шрифта из сохраненных настроек
+                const fontSize = loadSettings('shpargalka_fontSize', 90);
+                document.documentElement.style.setProperty('--font-size', `${fontSize}%`);
+                
+                // Настройка кнопок изменения шрифта
+                const increaseFontBtn = document.getElementById('increase-font');
+                const decreaseFontBtn = document.getElementById('decrease-font');
+                
+                if (increaseFontBtn) {
+                    increaseFontBtn.addEventListener('click', function() {
+                        let currentSize = parseFloat(
+                            getComputedStyle(document.documentElement).getPropertyValue('--font-size')
+                        );
+                        currentSize += 10;
+                        currentSize = Math.max(50, Math.min(200, currentSize));
+                        document.documentElement.style.setProperty('--font-size', `${currentSize}%`);
+                        saveSettings('shpargalka_fontSize', currentSize);
+                    });
+                }
+                
+                if (decreaseFontBtn) {
+                    decreaseFontBtn.addEventListener('click', function() {
+                        let currentSize = parseFloat(
+                            getComputedStyle(document.documentElement).getPropertyValue('--font-size')
+                        );
+                        currentSize -= 10;
+                        currentSize = Math.max(50, Math.min(200, currentSize));
+                        document.documentElement.style.setProperty('--font-size', `${currentSize}%`);
+                        saveSettings('shpargalka_fontSize', currentSize);
+                    });
+                }
+            });
+        </script>
     </body>
 </html>

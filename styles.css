@@ -1,11 +1,35 @@
 :root {
-    --font-size: 90%; /* Уменьшенный дефолтный размер шрифта */
+    --font-size: 90%; /* Базовый размер шрифта */
+    
+    /* Цветовая палитра в оттенках серого */
+    --color-bg-dark: #292929;
+    --color-text-primary: #e0e0e0;
+    --color-text-header: #d0d8e0;
+    --color-text-command: #a0b8c8;
+    --color-text-description: #b0b0b0;
+    --color-border: #3a3a3a;
+    --color-highlight: #e0e0c0;
+    --color-button-hover: #404040;
+    --color-button-active: #505050;
 }
+
+/* Класс для визуально скрытого контента (доступен только для скринридеров) */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
 body {
     margin: 0;
     padding: 0;
-    background-color: #292929;
-    color: #00ff00;
+    background-color: var(--color-bg-dark);
+    color: var(--color-text-primary);
     font-family: "Courier New", Courier, monospace;
     font-size: var(--font-size);
     display: flex;
@@ -18,8 +42,8 @@ body {
 #control-panel {
     position: sticky;
     top: 0;
-    background-color: #292929;
-    border-bottom: 2px solid #00ff00;
+    background-color: var(--color-bg-dark);
+    border-bottom: 2px solid var(--color-border);
     padding: 10px 20px;
     box-sizing: border-box;
     display: flex;
@@ -28,25 +52,31 @@ body {
     z-index: 1000;
 }
 
-/* Выровнять все кнопки в панели по размеру и вертикали */
-#control-panel button {
+/* Универсальные стили для кнопок */
+button {
     padding: 8px 14px;
     font-size: 14px;
     line-height: 1.2;
-    border: 2px solid #00ff00;
-    background-color: #292929;
-    color: #00ff00;
+    border: 2px solid var(--color-border);
+    background-color: var(--color-bg-dark);
+    color: var(--color-text-primary);
     cursor: pointer;
     border-radius: 4px;
     margin: 0 5px;
-    transition:
-        background-color 0.3s,
-        color 0.3s;
+    transition: background-color 0.3s, color 0.3s;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    height: 36px; /* фиксированная высота для выравнивания */
+    height: 36px;
     box-sizing: border-box;
+}
+
+button:hover {
+    background-color: var(--color-button-hover);
+}
+
+button:active {
+    background-color: var(--color-button-active);
 }
 
 /* Контейнер для основного контента */
@@ -54,7 +84,7 @@ body {
     flex: 1;
     padding: 20px;
     box-sizing: border-box;
-    background-color: #292929;
+    background-color: var(--color-bg-dark);
     display: flex;
     flex-direction: row;
 }
@@ -64,68 +94,27 @@ body {
     flex: 1;
     padding: 10px;
     font-size: 16px;
-    border: 2px solid #00ff00;
-    background-color: #292929;
-    color: #00ff00;
+    border: 2px solid var(--color-border);
+    background-color: var(--color-bg-dark);
+    color: var(--color-text-primary);
     outline: none;
     border-radius: 4px;
     box-sizing: border-box;
     min-width: 200px;
 }
 
-/* Кнопки изменения размера шрифта */
-.font-size-controls {
-    display: flex;
-    gap: 10px;
-}
-
-.font-size-controls button {
-    padding: 10px;
-    font-size: 14px;
-    border: 2px solid #00ff00;
-    background-color: #292929;
-    color: #00ff00;
-    cursor: pointer;
-    border-radius: 4px;
-    margin: 0 5px;
-    transition:
-        background-color 0.3s,
-        color 0.3s;
-}
-
-.font-size-controls button:hover,
-.column-controls button:hover {
-    background-color: #292929;
-    color: #000;
-}
-
-/* Стили для кнопок управления колонками */
+/* Группы контролов */
+.font-size-controls,
 .column-controls {
     display: flex;
     gap: 10px;
 }
 
-.column-controls button {
-    padding: 10px;
-    font-size: 14px;
-    border: 2px solid #00ff00;
-    background-color: #292929;
-    color: #00ff00;
-    cursor: pointer;
-    border-radius: 4px;
-    margin: 0 5px;
-    transition:
-        background-color 0.3s,
-        color 0.3s;
-}
-
-/* TOC styles removed */
-
 /* Контейнер для блоков команд с использованием CSS Columns */
 #blocks-container {
     column-count: 3;
     column-gap: 20px;
-    padding: 0; /* Убраны внутренние отступы */
+    padding: 0;
     box-sizing: border-box;
     flex: 1;
     width: 100%;
@@ -133,20 +122,18 @@ body {
 
 /* Стиль блока команды */
 .block {
-    background-color: #292929;
-    border: 2px solid #00ff00;
+    background-color: var(--color-bg-dark);
+    border: 2px solid var(--color-border);
     border-radius: 8px;
     padding: 20px;
     box-sizing: border-box;
-    margin-bottom: 20px; /* Отступ между блоками */
+    margin-bottom: 20px;
     display: inline-block;
-    width: 100%; /* Ширина блока внутри колонки */
-    /* Переходы для плавного появления и исчезновения */
+    width: 100%;
+    transition: opacity 0.3s ease, transform 0.3s ease;
     opacity: 1;
     transform: scale(1);
-    transition:
-        opacity 0.3s ease,
-        transform 0.3s ease;
+    break-inside: avoid; /* Предотвращает разрыв блока при многоколоночном отображении */
 }
 
 /* Скрытие блока */
@@ -154,16 +141,13 @@ body {
     opacity: 0;
     transform: scale(0.95);
     pointer-events: none;
-    transition:
-        opacity 0.3s ease,
-        transform 0.3s ease;
-    display: none; /* Полностью скрыть блок */
+    display: none;
 }
 
 /* Заголовок блока */
 .block h2 {
     margin-top: 0;
-    color: #ffd700;
+    color: var(--color-text-header);
     font-size: 20px;
 }
 
@@ -174,29 +158,29 @@ body {
 
 /* Скрытие команды */
 .command.hidden-command {
-    display: none; /* Скрывать несоответствующие команды */
+    display: none;
 }
 
 /* Стиль команды */
 .command .cmd {
-    color: #00bfff;
+    color: var(--color-text-command);
     font-weight: bold;
 }
 
 /* Стиль двоеточия */
 .command .colon {
-    color: #adff2f;
+    color: var(--color-text-description);
 }
 
 /* Стиль описания команды */
 .command .description {
-    color: #adff2f;
+    color: var(--color-text-description);
 }
 
 /* Стили для подсветки найденных слов */
 mark {
-    background-color: yellow;
-    color: black;
+    background-color: var(--color-highlight);
+    color: #333;
 }
 
 /* Медиа-запросы для адаптивности */
@@ -210,22 +194,29 @@ mark {
     #blocks-container {
         column-count: 1;
     }
+    
+    #control-panel {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+    
+    .font-size-controls,
+    .column-controls {
+        justify-content: center;
+    }
 }
 
 @media (max-width: 600px) {
-    #sidebar {
-        width: 200px;
-    }
-
     #blocks-container {
         column-count: 1;
         padding: 0;
         column-gap: 15px;
     }
 
-    .font-size-controls button {
+    button {
         font-size: 12px;
-        padding: 8px;
+        padding: 6px 10px;
     }
 
     .block {
