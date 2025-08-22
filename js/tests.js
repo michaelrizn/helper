@@ -1,43 +1,38 @@
 // JavaScript для управления тестами
 class TestManager {
     constructor() {
-        // Элементы интерфейса
         this.questionElement = document.getElementById('current-question');
         this.optionsElement = document.getElementById('options');
         this.prevButton = document.getElementById('prev-btn');
         this.nextButton = document.getElementById('next-btn');
         this.resultElement = document.getElementById('result');
-        this.topicButtons = document.querySelectorAll('.topic-btn');
+        this.topicButtons = document.querySelectorAll('.topic-selector .topic-btn');
         
-        // Кнопки изменения размера шрифта
         this.decreaseFontBtn = document.getElementById('decrease-font');
         this.increaseFontBtn = document.getElementById('increase-font');
         
-        // Переменные для отслеживания состояния
         this.currentTopic = 'linux';
         this.currentQuestionIndex = 0;
         this.userAnswers = {};
         this.tests = {};
-        this.questionOrder = {}; // Для хранения случайного порядка вопросов
+        this.questionOrder = {};
+        this.autoAdvanceTimeoutId = null;
+        this.isAwaitingFeedback = false;
         
-        // Привязка методов к текущему экземпляру
         this.showPreviousQuestion = this.showPreviousQuestion.bind(this);
         this.showNextQuestion = this.showNextQuestion.bind(this);
         this.showQuestion = this.showQuestion.bind(this);
     }
     
-    // Инициализация и настройка тестов
     init() {
         console.log('Инициализация TestManager');
         if (!this.loadTests()) return;
         
-        // Инициализация массива ответов пользователя и случайного порядка вопросов
         Object.keys(this.tests).forEach(topic => {
             this.userAnswers[topic] = new Array(this.tests[topic].length).fill(null);
             this.randomizeQuestions(topic);
         });
         
-        // Убедимся, что начальная кнопка темы активна
         this.topicButtons.forEach(btn => {
             if (btn.getAttribute('data-topic') === this.currentTopic) {
                 btn.classList.add('active');
@@ -46,31 +41,25 @@ class TestManager {
             }
         });
         
-        // Отображение первого вопроса
         this.showQuestion();
         
-        // Обработчики событий для кнопок навигации
         this.prevButton.addEventListener('click', this.showPreviousQuestion);
         this.nextButton.addEventListener('click', this.showNextQuestion);
         
-        // Обработчики для кнопок выбора темы
         this.topicButtons.forEach(button => {
             button.addEventListener('click', () => {
                 const topic = button.getAttribute('data-topic');
-                if (topic !== this.currentTopic) {
+                if (topic && topic !== this.currentTopic) {
+                    this.clearAutoAdvance();
                     this.currentTopic = topic;
                     this.currentQuestionIndex = 0;
-                    
-                    // Обновление активной кнопки
                     this.topicButtons.forEach(btn => btn.classList.remove('active'));
                     button.classList.add('active');
-                    
                     this.showQuestion();
                 }
             });
         });
         
-        // Обработчики изменения размера шрифта
         let fontSize = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--font-size')) || 1.0;
         const minSize = 0.8;
         const maxSize = 2.5;
@@ -94,7 +83,6 @@ class TestManager {
             }
         });
         
-        // Восстановление размера при загрузке
         const savedSize = localStorage.getItem('fontSize');
         if (savedSize) {
             fontSize = parseFloat(savedSize);
@@ -102,7 +90,6 @@ class TestManager {
         }
     }
     
-    // Загрузка тестов из глобальных переменных
     loadTests() {
         console.log('Загрузка тестов из глобальных переменных');
         if (window.LinuxTests && window.LinuxTests.length > 0) {
@@ -130,7 +117,6 @@ class TestManager {
             this.tests.grafana = window.GrafanaTests;
         }
         
-        // Проверка наличия тестов
         if (!this.tests[this.currentTopic] || this.tests[this.currentTopic].length === 0) {
             console.error(`Тесты для темы "${this.currentTopic}" не найдены`);
             this.questionElement.textContent = `Тесты для темы "${this.currentTopic}" не найдены`;
@@ -141,7 +127,6 @@ class TestManager {
         return true;
     }
     
-    // Функция для перемешивания массива (алгоритм Фишера-Йейтса)
     shuffleArray(array) {
         const newArray = [...array];
         for (let i = newArray.length - 1; i > 0; i--) {
@@ -151,14 +136,20 @@ class TestManager {
         return newArray;
     }
     
-    // Создание случайного порядка вопросов
     randomizeQuestions(topic) {
         const testLength = this.tests[topic].length;
         const indices = Array.from({ length: testLength }, (_, i) => i);
         this.questionOrder[topic] = this.shuffleArray(indices);
     }
     
-    // Получение текущего вопроса с учетом случайного порядка
+    clearAutoAdvance() {
+        if (this.autoAdvanceTimeoutId !== null) {
+            clearTimeout(this.autoAdvanceTimeoutId);
+            this.autoAdvanceTimeoutId = null;
+        }
+        this.isAwaitingFeedback = false;
+    }
+    
     getCurrentQuestion() {
         if (!this.questionOrder[this.currentTopic] || 
             this.currentQuestionIndex >= this.tests[this.currentTopic].length) {
@@ -169,19 +160,18 @@ class TestManager {
         return this.tests[this.currentTopic][randomIndex];
     }
     
-    // Получение индекса правильного ответа для текущего вопроса
     getCurrentQuestionOriginalIndex() {
         return this.questionOrder[this.currentTopic][this.currentQuestionIndex];
     }
     
-    // Показать сообщение о правильности ответа
     showFeedback(isCorrect, correctOptionIndex) {
-        // Показываем результат
+        this.isAwaitingFeedback = true;
+        this.prevButton.disabled = true;
+        this.nextButton.disabled = true;
         this.resultElement.textContent = isCorrect ? 'Правильно!' : 'Неправильно!';
         this.resultElement.style.display = 'block';
         this.resultElement.style.color = isCorrect ? '#a0e0a0' : '#e0a0a0';
         
-        // Подсвечиваем правильный и неправильный ответы
         const options = document.querySelectorAll('.option');
         
         options.forEach((option, index) => {
@@ -192,8 +182,10 @@ class TestManager {
             }
         });
         
-        // Переходим к следующему вопросу через 1.5 секунды
-        setTimeout(() => {
+        this.clearAutoAdvance();
+        this.autoAdvanceTimeoutId = setTimeout(() => {
+            this.autoAdvanceTimeoutId = null;
+            this.isAwaitingFeedback = false;
             if (this.currentQuestionIndex < this.tests[this.currentTopic].length - 1) {
                 this.currentQuestionIndex++;
                 this.showQuestion();
@@ -203,21 +195,43 @@ class TestManager {
         }, 1500);
     }
     
-    // Отображение текущего вопроса
+    generateSecureRandom(max) {
+        const array = new Uint32Array(1);
+        crypto.getRandomValues(array);
+        return array[0] % max;
+    }
+    
+    shuffleOptionsWithCorrectAnswer(options, correctAnswerIndex) {
+        const shuffledOptions = [...options];
+        const indices = Array.from({length: options.length}, (_, i) => i);
+        
+        for (let i = indices.length - 1; i > 0; i--) {
+            const j = this.generateSecureRandom(i + 1);
+            [indices[i], indices[j]] = [indices[j], indices[i]];
+        }
+        
+        const newCorrectAnswerIndex = indices.indexOf(correctAnswerIndex);
+        const reorderedOptions = indices.map(index => options[index]);
+        
+        return {
+            options: reorderedOptions,
+            correctAnswerIndex: newCorrectAnswerIndex
+        };
+    }
+    
     showQuestion() {
+        this.clearAutoAdvance();
         if (!this.tests[this.currentTopic] || !this.tests[this.currentTopic].length) {
             console.error(`Тесты для темы "${this.currentTopic}" не найдены или пустые`);
             this.questionElement.textContent = `Тесты для темы "${this.currentTopic}" не найдены`;
             return;
         }
         
-        // Проверим порядок вопросов
         if (!this.questionOrder[this.currentTopic]) {
             console.error(`Порядок вопросов для темы "${this.currentTopic}" не был инициализирован`);
             this.randomizeQuestions(this.currentTopic);
         }
         
-        // Проверим индекс вопроса
         if (this.currentQuestionIndex >= this.tests[this.currentTopic].length) {
             console.error(`Индекс вопроса ${this.currentQuestionIndex} выходит за пределы массива (длина: ${this.tests[this.currentTopic].length})`);
             this.currentQuestionIndex = 0;
@@ -232,67 +246,73 @@ class TestManager {
         
         console.log('Отображение вопроса:', question);
         
-        // Обновление текста вопроса с прогрессом
         this.questionElement.textContent = `Вопрос ${this.currentQuestionIndex + 1} из ${this.tests[this.currentTopic].length}: ${question.question}`;
         
-        // Очистка вариантов ответов
         this.optionsElement.innerHTML = '';
         
-        // Добавление вариантов ответов
-        question.options.forEach((option, index) => {
+        const shuffledData = this.shuffleOptionsWithCorrectAnswer(question.options, question.correctAnswer);
+        const shuffledOptions = shuffledData.options;
+        const newCorrectAnswerIndex = shuffledData.correctAnswerIndex;
+        
+        const originalQuestionIndex = this.getCurrentQuestionOriginalIndex();
+        const userAnswerText = this.userAnswers[this.currentTopic][originalQuestionIndex];
+        const isQuestionAnswered = userAnswerText !== null;
+        
+        const userAnswerIndex = isQuestionAnswered ? shuffledOptions.indexOf(userAnswerText) : -1;
+        
+        shuffledOptions.forEach((option, index) => {
             const optionElement = document.createElement('div');
             optionElement.classList.add('option');
             optionElement.textContent = option;
             
-            const originalQuestionIndex = this.getCurrentQuestionOriginalIndex();
-            
-            // Если пользователь уже выбрал этот вариант
-            if (this.userAnswers[this.currentTopic][originalQuestionIndex] === index) {
-                optionElement.classList.add('selected');
+            if (isQuestionAnswered) {
+                if (index === userAnswerIndex) {
+                    optionElement.classList.add('selected');
+                    if (index === newCorrectAnswerIndex) {
+                        optionElement.classList.add('correct');
+                    } else {
+                        optionElement.classList.add('incorrect');
+                    }
+                } else if (index === newCorrectAnswerIndex) {
+                    optionElement.classList.add('correct');
+                }
+            } else {
+                optionElement.addEventListener('click', () => {
+                    if (this.isAwaitingFeedback) {
+                        return;
+                    }
+                    
+                    this.userAnswers[this.currentTopic][originalQuestionIndex] = option;
+                    
+                    document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+                    optionElement.classList.add('selected');
+                    
+                    const isCorrect = index === newCorrectAnswerIndex;
+                    this.showFeedback(isCorrect, newCorrectAnswerIndex);
+                });
             }
             
-            // Обработчик клика по варианту ответа
-            optionElement.addEventListener('click', () => {
-                // Если ответ уже выбран, не реагируем на повторные клики
-                if (document.querySelector('.option.correct') || document.querySelector('.option.incorrect')) {
-                    return;
-                }
-                
-                // Сохранение ответа пользователя
-                this.userAnswers[this.currentTopic][originalQuestionIndex] = index;
-                
-                // Обновление стилей
-                document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
-                optionElement.classList.add('selected');
-                
-                // Проверка правильности ответа и показ обратной связи
-                const isCorrect = index === question.correctAnswer;
-                this.showFeedback(isCorrect, question.correctAnswer);
-            });
-            
             this.optionsElement.appendChild(optionElement);
-        });
+         });
         
-        // Обновление состояния кнопок навигации
         this.prevButton.disabled = this.currentQuestionIndex === 0;
+        this.nextButton.disabled = false;
         this.nextButton.textContent = this.currentQuestionIndex === this.tests[this.currentTopic].length - 1 ? 'Завершить' : 'Следующий';
         
-        // Скрытие результата
         this.resultElement.style.display = 'none';
     }
     
-    // Показать предыдущий вопрос
     showPreviousQuestion() {
         if (this.currentQuestionIndex > 0) {
+            this.clearAutoAdvance();
             this.currentQuestionIndex--;
             this.showQuestion();
         }
     }
     
-    // Показать следующий вопрос или результаты
     showNextQuestion() {
         const test = this.tests[this.currentTopic];
-        
+        this.clearAutoAdvance();
         if (this.currentQuestionIndex < test.length - 1) {
             this.currentQuestionIndex++;
             this.showQuestion();
@@ -301,12 +321,11 @@ class TestManager {
         }
     }
     
-    // Показать результаты теста
     showResults() {
+        this.clearAutoAdvance();
         const test = this.tests[this.currentTopic];
         let correctCount = 0;
         
-        // Подсчет правильных ответов
         Object.keys(this.userAnswers[this.currentTopic]).forEach(index => {
             const originalIndex = this.questionOrder[this.currentTopic][index];
             const userAnswer = this.userAnswers[this.currentTopic][originalIndex];
@@ -315,7 +334,6 @@ class TestManager {
             }
         });
         
-        // Отображение результата
         const percentage = Math.round((correctCount / test.length) * 100);
         this.resultElement.textContent = `Результат: ${correctCount} из ${test.length} правильных ответов (${percentage}%)`;
         this.resultElement.style.display = 'block';
